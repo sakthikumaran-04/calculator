@@ -13,22 +13,22 @@
         <div id="buttons">
             <input type="button" value="AC" onclick="input.value=''" id="action">
             <input type="button" value="Del" onclick="input.value= input.value.toString().slice(0,-1)" id="action">
-            <input type="button" value="%" onclick="input.value+='%'" id="action">
-            <input type="button" value="/" onclick="input.value+='/'" id="action">
+            <input type="button" value="%" onclick="display(this.value)"id="action">
+            <input type="button" value="/" onclick="display(this.value)"id="action">
             <input type="button" value="7" onclick="display(this.value)">
             <input type="button" value="8" onclick="display(this.value)">
             <input type="button" value="9" onclick="display(this.value)">
-            <input type="button" value="*" onclick="input.value+='*'" id="action">
+            <input type="button" value="*" onclick="display(this.value)" id="action">
             <input type="button" value="4" onclick="display(this.value)">
             <input type="button" value="5" onclick="display(this.value)">
             <input type="button" value="6" onclick="display(this.value)">
-            <input type="button" value="-" onclick="input.value+='-'" id="action">
+            <input type="button" value="-" onclick="display(this.value)" id="action">
             <input type="button" value="1" onclick="display(this.value)">
             <input type="button" value="2" onclick="display(this.value)">
             <input type="button" value="3" onclick="display(this.value)">
-            <input type="button" value="+" onclick="input.value+='+'" id="action">
+            <input type="button" value="+" onclick="display(this.value)" id="action">
             <input type="button" value="0" onclick="display(this.value)">
-            <input type="button" value="." onclick="input.value+='.'">
+            <input type="button" value="." onclick="display(this.value)">
             <input type="button" value="=" onclick="calc()" id="equal"> <!----eval---->
         </div>
     </div>
@@ -38,31 +38,53 @@
 
     <!------------------------script------------------------------->
     <script>
-        var input=document.getElementById('input');
-        function display(num){
-            if(input.value=="0"){
-            input.value=parseInt(num);  
-            }else{
-            input.value+=parseInt(num);
+        var input = document.getElementById('input');
+    
+        function display(num) {
+            let currentInput = input.value;
+            if ((currentInput == "0" || currentInput == '') && isOperator(num)) {
+                input.value = "0" + num;
+                if (currentInput == "0") {
+                    input.value = num;
+                }
+            } else if (currentInput == "invalid") {
+                return;
+            } else if (currentInput == "invalid" && isOperator(num)) {
+                input.value = "0" + num;
+            } else if (isOperator(currentInput.charAt(currentInput.length - 1)) && isOperator(num)) {
+                input.value = currentInput.slice(0, -1) + num;
+            } else {
+                input.value += num;
             }
         }
-
-
-
-
-        function calc(){
-            if(input.value==""){
-                input.value="0";
-            }
-            else{
-            try{
-                input.value=eval(`${input.value}`.replace(/(^|[^0-9])0+(\d+)/g,"$1$2"));
-            }
-            catch(error){
-                input='Invalid';
-            }
+    
+        function isOperator(char) {
+            return ['+', '-', '*', '/', '%'].includes(char);
         }
+    
+        function clearInput() {
+            input.value = "0";
+        }
+    
+        function deleteLastChar() {
+            input.value = input.value.slice(0, -1);
+        }
+    
+        function calc() {
+            if (input.value == "") {
+                input.value = "0";
+            } else if (input.value == "invalid") {
+                return;
+            } else {
+                try {
+                    input.value = eval(`${input.value}`.replace(/(^|[^0-9])0+(\d+)/g, "$1$2"));
+                } catch (error) {
+                    input.value = 'Invalid';
+                }
+            }
         }
     </script>
+    
+    
 </body>
 </html>
