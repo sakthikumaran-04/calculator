@@ -44,9 +44,7 @@
             let currentInput = input.value;
             if ((currentInput == "0" || currentInput == '') && isOperator(num)) {
                 input.value = "0" + num;
-                if (currentInput == "0") {
-                    input.value = num;
-                }
+            
             } else if (currentInput == "invalid") {
                 return;
             } else if (currentInput == "invalid" && isOperator(num)) {
